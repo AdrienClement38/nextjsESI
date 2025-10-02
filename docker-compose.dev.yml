@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      target: development
+    profiles:
+      - dev
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      target: development
+    profiles:
+      - dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    profiles:
+      - dev
+    ports:
+      - "8080:8080"
+    networks:
+      - database
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      db:
+        condition: service_healthy
